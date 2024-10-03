@@ -115,10 +115,17 @@ for i = 1:length(greenSignal)
 
     prevNum = greenSignal(i);
 end
+disp(bits);
+
 fileID = fopen('output.bin','w');
 
-outputs = bin2dec(strrep(num2str(bits), ' ', ''));
-disp(bits);
-fwrite(fileID, outputs);
+count = 1;
+while count + 7 <= length(bits)
+    outputs = bin2dec(strrep(num2str(bits(count:count+7)), ' ', ''));
+    fwrite(fileID, outputs);
+
+    count = count + 8;
+end
+
 fclose(fileID);
 end
