@@ -75,26 +75,6 @@ end
 save(outfilePrefix + ".mat","ROItimeSeries","ROIx","ROIy","infilepath","infilename","infileext");
 
 %% plot ROI intensities
-legendText="(" + num2str(ROIx) + "," + num2str(ROIy) + ")";
 
-figure;
-plot(ROItimeSeries(:,:,1)');
-legend(legendText,"Location","best");
-xlabel("Frame number");
-ylabel("R values");
-axis tight;
-
-figure;
-plot(ROItimeSeries(:,:,2)');
-legend(legendText,"Location","best");
-xlabel("Frame number");
-ylabel("G values");
-axis tight;
-
-figure;
-plot(ROItimeSeries(:,:,3)');
-legend(legendText,"Location","best");
-xlabel("Frame number");
-ylabel("B values");
-axis tight;
+signal
 end

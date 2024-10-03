@@ -75,15 +75,13 @@ end
 save(outfilePrefix + ".mat","ROItimeSeries","ROIx","ROIy","infilepath","infilename","infileext");
 
 %% plot ROI intensities
+
+greenSignal = ROItimeSeries(:,:, 2);
+
+greenSignal(greenSignal < 100) = 0;
+greenSignal(greenSignal >= 100) = 255;
+
 legendText="(" + num2str(ROIx) + "," + num2str(ROIy) + ")";
-
-figure;
-plot(ROItimeSeries(:,:,1)');
-legend(legendText,"Location","best");
-xlabel("Frame number");
-ylabel("R values");
-axis tight;
-
 figure;
 plot(ROItimeSeries(:,:,2)');
 legend(legendText,"Location","best");
@@ -92,9 +90,35 @@ ylabel("G values");
 axis tight;
 
 figure;
-plot(ROItimeSeries(:,:,3)');
-legend(legendText,"Location","best");
-xlabel("Frame number");
-ylabel("B values");
-axis tight;
+plot(1:length(greenSignal), greenSignal);
+
+
+%% find bits
+prevNum = 0;
+bits = [];
+
+startIdx = 1;
+
+% find transitions
+for i = 1:length(greenSignal)
+    
+    if prevNum == 0 && greenSignal(i) == 255
+        startIdx = i;
+    elseif prevNum == 255 && greenSignal(i) == 0
+        if i - startIdx > 10
+            bit = 1;
+        else
+            bit = 0;
+        end
+        bits = [bits, bit];
+    end
+
+    prevNum = greenSignal(i);
+end
+fileID = fopen('output.bin','w');
+
+outputs = bin2dec(strrep(num2str(bits), ' ', ''));
+disp(bits);
+fwrite(fileID, outputs);
+fclose(fileID);
 end
