@@ -1,2 +1,7 @@
 outputs
 *.asv
+*.mj2
+*.png
+*.mat
+*.mp4
+*.bin

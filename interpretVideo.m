@@ -1,4 +1,4 @@
-function ROItimeSeries = videoROIs2timeSeries(varargin)
+function ROItimeSeries = interpretVideo(varargin)
 %function ROItimeSeries = videoROIs2timeSeries 
 % Pull time-series amplitude data from video
 %   videoROIs2timeSeries(filepathname) queries the user for specific

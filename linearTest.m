@@ -14,10 +14,10 @@ debug = true;
 % size of output video
 vidWidth = 1440;
 vidHeight = 1080;   
-vidFPS = 30;        % frame rate for video
+vidFPS = 60;        % frame rate for video
 bitDepth = 6;
 
-outfile = "bars_ramp_bitDepth" + num2str(bitDepth) + "_" + num2str(vidFPS) + "fps";
+outfile = "linear" + num2str(bitDepth) + "_" + num2str(vidFPS) + "fps";
 
 %% output data to video
 % v = VideoWriter(outfile,"Archival");  % lossless compressed format
@@ -36,6 +36,8 @@ if debug
             'color','g','FontSize',14,'VerticalAlignment','top','parent',axVideo);
 end
 
+
+
 % define colors
 green = [0; 1; 0];
 red = [1; 0; 0];
@@ -46,17 +48,16 @@ yellow = red+green;
 cyan = green+blue;
 white = red+green+blue;
 
-% join color bars together; colors themselves need to be in dimension 3
-colorbars = permute([white yellow cyan green magenta red blue black],[3 2 1]);
+greenFrame = permute([green green green green green green green green],[3 2 1]);
+blueFrame = permute([blue blue blue blue blue blue blue blue],[3 2 1]);
+redFrame = permute([red red red red red red red red],[3 2 1]);
 
-for brightness=linspace(255,0,2^bitDepth)
-% create test image
-    % expand image to size of video
-    testImg = uint8(round(brightness)*imresize(colorbars,[vidHeight vidWidth],"nearest"));
-    % write individual frames as 8 bits*3 color channels
+
+for i = 1:255
+    
+    testImg = uint8(round(i)*imresize(redFrame,[vidHeight vidWidth],"nearest"));
     v.writeVideo(testImg);
-
-    % debug: show video being written
+    
     if debug
         hImage.CData = testImg;
         hText.String = "Frame " + num2str(v.FrameCount);
