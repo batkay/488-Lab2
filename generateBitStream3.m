@@ -115,13 +115,13 @@ for i = input'
             case 0
                 % do nothing
             case 1
-                magG2 = 200;
-                magG3 = 200;
-                magG4 = 200;
+                magG2 = 100;
+                magG3 = 100;
+                magG4 = 100;
             case 2
-                magG2 = 225;
-                magG3 = 225;
-                magG4 = 225;
+                magG2 = 175;
+                magG3 = 175;
+                magG4 = 175;
             case 3
                 magG2 = 255;
                 magG3 = 255;
@@ -138,13 +138,13 @@ for i = input'
             case 0
                 % do nothing
             case 1
-                magR2 = 200;
-                magR3 = 200;
-                magR4 = 200;
+                magR2 = 100;
+                magR3 = 100;
+                magR4 = 100;
             case 2
-                magR2 = 225;
-                magR3 = 225;
-                magR4 = 225;
+                magR2 = 175;
+                magR3 = 175;
+                magR4 = 175;
             case 3
                 magR2 = 255;
                 magR3 = 255;
@@ -162,6 +162,8 @@ for i = input'
         v.writeVideo(testImg4);
         testImg5 = uint8(magR5*imresize(redFrame,[vidHeight vidWidth],"nearest") + magG5*imresize(greenFrame,[vidHeight vidWidth],"nearest"));
         v.writeVideo(testImg5);
+
+        disp(magG2 + " " + magR2)
 
         numBuf = bitshift(numBuf, -4);
     end
