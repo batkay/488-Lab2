@@ -118,60 +118,14 @@ for i = input'
     % each input is 8 bit
     numBuf = i;
     
-    for j = 1:2
+    for j = 1:4
         % each character is interpretted and sent
-        top2 = bitand(bitshift(numBuf, -2), 0x3);
-        bottom2 = bitand(numBuf, 0x3);
+        top2 = bitand(bitshift(numBuf, -1), 0x1);
+        bottom2 = bitand(numBuf, 0x1);
 
-        magG1 = 255;
-        magG2 = 0;
-        magG3 = 0;
-        magG4 = 0;
-        magG5 = 0;
-
-        switch top2
-            case 0
-                % do nothing
-            case 1
-                magG2 = 100;
-                magG3 = 100;
-                magG4 = 100;
-            case 2
-                magG2 = 175;
-                magG3 = 175;
-                magG4 = 175;
-            case 3
-                magG2 = 255;
-                magG3 = 255;
-                magG4 = 255;
-        end
-
-        magR1 = 255;
-        magR2 = 0;
-        magR3 = 0;
-        magR4 = 0;
-        magR5 = 0;
-
-        switch bottom2
-            case 0
-                % do nothing
-            case 1
-                magR2 = 100;
-                magR3 = 100;
-                magR4 = 100;
-            case 2
-                magR2 = 175;
-                magR3 = 175;
-                magR4 = 175;
-            case 3
-                magR2 = 255;
-                magR3 = 255;
-                magR4 = 255;
-        end
-        
 
         % pixel mod 16 + 2, pixel
-        frame(floor((pixel-1)/gridSize) + 2, mod(pixel-1, gridSize) + 2, :) = magR2 * red + magG2 * green;
+        frame(floor((pixel-1)/gridSize) + 2, mod(pixel-1, gridSize) + 2, :) = (double(255 * bottom2) * red) + (double(255 * top2) * green);
 
         % disp(magG2 + " " + magR2)
         
@@ -191,6 +145,11 @@ for i = input'
 
             frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
             v.writeVideo(frameResize);
+            if debug
+                hImage.CData = frame;
+                hText.String = "Frame " + num2str(v.FrameCount);
+                drawnow limitrate nocallbacks;
+            end
             frame = zeros(dimensions, dimensions, 3);
 
             clk = ~clk;
@@ -198,7 +157,7 @@ for i = input'
             pixel = pixel + 1;
         end
 
-        numBuf = bitshift(numBuf, -4);
+        numBuf = bitshift(numBuf, -2);
     end
 
     

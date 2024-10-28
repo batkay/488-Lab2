@@ -93,19 +93,16 @@ close all;
 if (debug)
 figure;
 plot(1:length(greenSignal), greenSignal);
-legend(legendText,"Location","best");
 xlabel("Frame number");
 ylabel("G2");
 axis tight;
 figure;
 plot(1:length(blueSignal), blueSignal);
-legend(legendText,"Location","best");
 xlabel("Frame number");
 ylabel("B2");
 axis tight;
 figure;
 plot(1:length(redSignal), redSignal);
-legend(legendText,"Location","best");
 xlabel("Frame number");
 ylabel("R2");
 axis tight;
@@ -156,84 +153,20 @@ xlabel("Frame number");
 ylabel("R values");
 axis tight;
 end
-%% find bits
 
-ne0 = find(greenSignal~=0);                                   % Nonzero Elements
-ix0 = unique([ne0(1) ne0(diff([0 ne0])>1)]);        % Non-Zero Segment Start Indices
-eq0 = find(greenSignal==0);                                   % Zero Elements
-ix1 = unique([eq0(1) eq0(diff([0 eq0])>1)]);        % Zero Segment Start Indices
-ixv = sort([ix0 ix1 length(greenSignal)]);                    % Consecutive Indices Vector
-
-gd = diff(greenSignal);
-
-% [pks,locs,widths,proms] = findpeaks(greenSignal);
-
-ix0 = [];
-
-prevDiff = -1;
-for k1 = 1:length(gd)
-    if (prevDiff < 0 && gd(k1) > 0)
-        idx0 = [ix0, k1];
-        prevDiff = gd(k1);
-    end
-    if (gd(k1) < 0)
-        prevDiff = gd(k1);
-        
-    end
-end
-
-greenVals = zeros(1, length(ix0));
-for k1 = 1:length(ix0)-1
-    slice = greenSignal(ix0(k1):ix0(k1+1)-1);             % (Included the column)
-    % slice = greenSignal(locs(k1)-widths(k1)/2:locs(k1)+widths(k1)/2);
-    if debug
-    figure;
-    plot(1:length(slice), slice);
-    end
-    greenVals(k1) = mode(slice);
-    disp(val)
-end
-
-ne0 = find(redSignal~=0);                                   % Nonzero Elements
-ix0 = unique([ne0(1) ne0(diff([0 ne0])>1)]);        % Non-Zero Segment Start Indices
-eq0 = find(redSignal==0);                                   % Zero Elements
-ix1 = unique([eq0(1) eq0(diff([0 eq0])>1)]);        % Zero Segment Start Indices
-ixv = sort([ix0 ix1 length(redSignal)]);                    % Consecutive Indices Vector
-
-
-rd = diff(redSignal);
-ix0 = [];
-
-prevDiff = -1;
-for k1 = 1:length(gd)
-    if (prevDiff < 0 && gd(k1) > 0)
-        idx0 = [ix0, k1];
-        prevDiff = gd(k1);
-    end
-    if (gd(k1) < 0)
-        prevDiff = gd(k1);
-        
-    end
-end
-
-redVals = zeros(1, length(ix0));
-
-for k1 = 1:length(ix0)-1
-    slice = redSignal(ix0(k1):ix0(k1+1)-1);             % (Included the column)
-    % figure;
-    % plot(1:length(slice), slice);
-    redVals(k1) = mode(slice);
-    % disp(val)
-end
 
 greenVals = greenVals(greenVals~=0);
 redVals = redVals(redVals~=0);
 
 idx = 1;
 
-outputArr = zeros(1, fix(min(length(greenVals), length(redVals)) / 2));
 
-while (idx + 1 <= min(length(greenVals), length(redVals)))
+% greenVals will need to be green from x, y, followed by x + 1, y etc
+numElements = fix(min(length(greenVals), length(redVals)) / 2);
+
+outputArr = zeros(1, numElements);
+
+while (idx + 1 <= numElements)
     output = 0;
 
     greenV = 0;

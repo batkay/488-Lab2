@@ -15,7 +15,7 @@ debug = true;
 vidWidth = 1440;
 vidHeight = 1080;   
 vidFPS = 60;        % frame rate for video
-bitDepth = 6;
+bitDepth = 8;
 
 outfile = "stream_bitDepth" + num2str(bitDepth) + "_" + num2str(vidFPS) + "fps";
 
@@ -38,8 +38,8 @@ end
 
 bitstream = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0];
 
-dimensions = 22;
-gridSize = (dimensions-1);
+dimensions = 23;
+gridsize = dimensions - 2;
 
 fileID = fopen("bits.bin");
 input = fread(fileID);
@@ -67,6 +67,7 @@ frame = zeros(dimensions, dimensions, 3);
 frame(1, 1, :) = 255 * green;
 frame(1, dimensions, :) = 255 * green;
 frame(dimensions, 1, :) = 255 * green;
+frame(dimensions, dimensions, :) = 255 * green;
 
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
@@ -80,6 +81,7 @@ end
 frame(1, 1, :) = 255 * green;
 frame(1, dimensions, :) = 255 * green;
 frame(dimensions, 1, :) = 255 * green;
+frame(dimensions, dimensions, :) = 255 * green;
 
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
@@ -91,6 +93,7 @@ end
 frame(1, 1, :) = 255 * green;
 frame(1, dimensions, :) = 255 * green;
 frame(dimensions, 1, :) = 255 * green;
+frame(dimensions, dimensions, :) = 255 * green;
 
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
@@ -102,6 +105,7 @@ end
 frame(1, 1, :) = 255 * green;
 frame(1, dimensions, :) = 255 * green;
 frame(dimensions, 1, :) = 255 * green;
+frame(dimensions, dimensions, :) = 255 * green;
 
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
@@ -171,11 +175,11 @@ for i = input'
         
 
         % pixel mod 16 + 2, pixel
-        frame(floor((pixel-1)/gridSize) + 2, mod(pixel-1, gridSize) + 2, :) = magR2 * red + magG2 * green;
+        frame(floor((pixel-1)/gridsize) + 2, mod(pixel-1, gridsize) + 2, :) = magR2 * red + magG2 * green;
 
         % disp(magG2 + " " + magR2)
         
-        if (pixel == gridSize*gridSize)
+        if (pixel == gridsize*gridsize)
             pixel = 1;
 
             clkPixel = black;
@@ -187,6 +191,7 @@ for i = input'
             frame(1, 1, :) = 255 * clkPixel;
             frame(1, dimensions, :) = 255 * clkPixel;
             frame(dimensions, 1, :) = 255 * clkPixel;
+            frame(dimensions,dimensions,:)= 255 * clkPixel;
 
 
             frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
@@ -218,6 +223,7 @@ if (pixel ~= 1)
     frame(1, 1, :) = 255 * clkPixel;
     frame(1, dimensions, :) = 255 * clkPixel;
     frame(dimensions, 1, :) = 255 * clkPixel;
+    frame(dimensions, dimensions, :) = 255 * clkPixel;
 
     frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
     v.writeVideo(frameResize);
@@ -233,9 +239,10 @@ if (clk)
 end
 
 %reset
-frame(1, 1, :) = 255 * clkPixel;
-frame(1, dimensions, :) = 255 * clkPixel;
-frame(dimensions, 1, :) = 255 * clkPixel;
+frame(1, 1, :) = clkPixel;
+frame(1, dimensions, :) = clkPixel;
+frame(dimensions, 1, :) = clkPixel;
+frame(dimensions, dimensions, :) = clkPixel;
 
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
@@ -245,9 +252,11 @@ if debug
     drawnow limitrate nocallbacks;
 end
 
-frame(1, 1, :) = 255 * clkPixel;
-frame(1, dimensions, :) = 255 * clkPixel;
-frame(dimensions, 1, :) = 255 * clkPixel;
+frame(1, 1, :) = clkPixel;
+frame(1, dimensions, :) = clkPixel;
+frame(dimensions, 1, :) = clkPixel;
+frame(dimensions, dimensions, :) = clkPixel;
+
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
 if debug
@@ -255,9 +264,11 @@ if debug
     hText.String = "Frame " + num2str(v.FrameCount);
     drawnow limitrate nocallbacks;
 end
-frame(1, 1, :) = 255 * clkPixel;
-frame(1, dimensions, :) = 255 * clkPixel;
-frame(dimensions, 1, :) = 255 * clkPixel;
+frame(1, 1, :) = clkPixel;
+frame(1, dimensions, :) = clkPixel;
+frame(dimensions, 1, :) = clkPixel;
+frame(dimensions, dimensions, :) =clkPixel;
+
 frameResize = uint8(imresize(frame,[vidHeight vidWidth],"nearest"));
 v.writeVideo(frameResize);
 if debug
